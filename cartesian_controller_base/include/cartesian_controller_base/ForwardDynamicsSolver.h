@@ -207,6 +207,6 @@ class ForwardDynamicsSolver
 
 } // namespace
 
-#include <cartesian_controller_base/ForwardDynamicsSolver.hpp>
+#include "ForwardDynamicsSolver.hpp"
 
 #endif

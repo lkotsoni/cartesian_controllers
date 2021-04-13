@@ -112,7 +112,7 @@ generate_dynamic_reconfigure_options(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES cartesian_controller_base
-  CATKIN_DEPENDS roscpp controller_interface kdl_parser trajectory_msgs control_toolbox eigen_conversions dynamic_reconfigure
+  CATKIN_DEPENDS roscpp controller_interface kdl_parser trajectory_msgs control_toolbox eigen_conversions dynamic_reconfigure kdl_conversions
 #  DEPENDS system_lib
 )
 
@@ -134,7 +134,7 @@ add_library(${PROJECT_NAME}
   src/SpatialPDController.cpp
   src/PDController.cpp
   include/cartesian_controller_base/cartesian_controller_base.h
-  include/cartesian_controller_base/cartesian_controller_base.hpp
+        src/cartesian_controller_base.hpp
   include/cartesian_controller_base/ForwardDynamicsSolver.h
   include/cartesian_controller_base/SpatialPDController.h
   include/cartesian_controller_base/PDController.h

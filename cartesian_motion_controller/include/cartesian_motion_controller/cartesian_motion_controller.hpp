@@ -77,6 +77,14 @@ init(HardwareInterface* hw, ros::NodeHandle& nh)
       &CartesianMotionController<HardwareInterface>::targetFrameCallback,
       this);
 
+  m_target_twist_subscr = nh.subscribe(
+      "/spacenav/twist",
+      3,
+      &CartesianMotionController<HardwareInterface>::targetTwistCallback,
+      this);
+
+  current_frame_pub = nh.advertise<geometry_msgs::PoseStamped>("current_pose", 5);
+
   return true;
 }
 
@@ -143,7 +151,10 @@ computeMotionError()
 {
   // Compute motion error wrt robot_base_link
   m_current_frame = Base::m_forward_dynamics_solver.getEndEffectorPose();
+  current_pose.header.stamp = ros::Time::now();
 
+  tf::poseKDLToMsg(m_current_frame, current_pose.pose);
+  current_frame_pub.publish(current_pose);
   // Transformation from target -> current corresponds to error = target - current
   KDL::Frame error_kdl;
   error_kdl.M = m_target_frame.M * m_current_frame.M.Inverse();
@@ -200,6 +211,44 @@ targetFrameCallback(const geometry_msgs::PoseStamped& target)
         target.pose.position.x,
         target.pose.position.y,
         target.pose.position.z));
+}
+
+template <class HardwareInterface>
+void CartesianMotionController<HardwareInterface>::
+targetTwistCallback(const geometry_msgs::Twist& twist)
+{
+  geometry_msgs::Pose target = current_pose.pose;
+  target.position.x += twist.linear.x;
+  target.position.y += twist.linear.y;
+  target.position.z += twist.linear.z;
+
+
+  tf::Quaternion temp1;
+  tf::quaternionMsgToTF(target.orientation, temp1);
+  tf::Quaternion temp2;
+  temp2.setRPY(twist.angular.x, twist.angular.y, twist.angular.z);
+
+  quaternionTFToMsg(temp2*temp1,target.orientation);
+
+
+//  if (target.header.frame_id != Base::m_robot_base_link)
+//  {
+//    ROS_WARN_STREAM_THROTTLE(3, "Got target pose in wrong reference frame. Expected: "
+//        << Base::m_robot_base_link << " but got "
+//        << target.header.frame_id);
+//    return;
+//  }
+
+  m_target_frame = KDL::Frame(
+      KDL::Rotation::Quaternion(
+        target.orientation.x,
+        target.orientation.y,
+        target.orientation.z,
+        target.orientation.w),
+      KDL::Vector(
+        target.position.x,
+        target.position.y,
+        target.position.z));
 }
 
 } // namespace

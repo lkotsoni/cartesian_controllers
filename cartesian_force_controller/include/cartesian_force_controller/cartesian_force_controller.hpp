@@ -73,7 +73,7 @@ init(HardwareInterface* hw, ros::NodeHandle& nh)
 
   m_signal_taring_server = nh.advertiseService("signal_taring",&CartesianForceController<HardwareInterface>::signalTaringCallback,this);
   m_target_wrench_subscriber = nh.subscribe("target_wrench",2,&CartesianForceController<HardwareInterface>::targetWrenchCallback,this);
-  m_ft_sensor_wrench_subscriber = nh.subscribe("ft_sensor_wrench",2,&CartesianForceController<HardwareInterface>::ftSensorWrenchCallback,this);
+  m_ft_sensor_wrench_subscriber = nh.subscribe("/rokubimini/ft_sensor0/ft_sensor_readings/wrench",2,&CartesianForceController<HardwareInterface>::ftSensorWrenchCallback,this);
 
   // Initialize tool and gravity compensation
   std::map<std::string, double> gravity;

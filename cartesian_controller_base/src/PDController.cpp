@@ -87,7 +87,8 @@ double PDController::operator()(const double& error, const ros::Duration& period
 
   PDGains gains(*m_gains.readFromRT());
   double result = gains.m_p * error + gains.m_d * (error - m_last_p_error) / period.toSec();
-
+//std::cout<<"P:"<<gains.m_p<<std::endl;
+//std::cout<<"D:"<<gains.m_d<<std::endl;
   m_last_p_error = error;
   return result;
 }

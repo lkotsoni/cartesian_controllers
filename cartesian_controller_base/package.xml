@@ -55,6 +55,7 @@
   <run_depend>control_toolbox</run_depend>
   <run_depend>eigen_conversions</run_depend>
   <run_depend>dynamic_reconfigure</run_depend>
+  <run_depend>kdl_conversions</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

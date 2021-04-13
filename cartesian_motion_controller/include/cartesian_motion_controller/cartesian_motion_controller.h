@@ -45,6 +45,9 @@
 
 // ROS
 #include <kdl/frames.hpp>
+#include <kdl_conversions/kdl_msg.h>
+#include <tf/LinearMath/Quaternion.h>
+#include "tf/transform_datatypes.h"
 #include <geometry_msgs/PoseStamped.h>
 
 namespace cartesian_motion_controller
@@ -108,10 +111,16 @@ class CartesianMotionController : public virtual cartesian_controller_base::Cart
   private:
     void targetFrameCallback(const geometry_msgs::PoseStamped& pose);
 
-    ros::Subscriber m_target_frame_subscr;
-    std::string     m_target_frame_topic;
-    KDL::Frame      m_target_frame;
-    KDL::Frame      m_current_frame;
+    void targetTwistCallback(const geometry_msgs::Twist &target);
+
+  ros::Subscriber m_target_frame_subscr;
+  ros::Subscriber m_target_twist_subscr;
+  ros::Publisher  current_frame_pub;
+  std::string     m_target_frame_topic;
+  std::string     m_target_twist_topic;
+  KDL::Frame      m_target_frame;
+  KDL::Frame      m_current_frame;
+  geometry_msgs::PoseStamped current_pose;
 };
 
 }

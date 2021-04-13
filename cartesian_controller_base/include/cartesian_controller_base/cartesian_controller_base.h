@@ -64,6 +64,7 @@
 // Other
 #include <vector>
 #include <string>
+#include <fstream>
 
 namespace cartesian_controller_base
 {
@@ -161,8 +162,9 @@ class CartesianControllerBase : public controller_interface::Controller<Hardware
     trajectory_msgs::JointTrajectoryPoint             m_simulated_joint_motion;
     SpatialPDController                              m_spatial_controller;
     ctrl::Vector6D                                    m_cartesian_input;
+    std::ofstream myfile;
     double m_error_scale;
-
+    ros::Publisher pub;
     // Against multi initialization in multi inheritance scenarios
     bool m_already_initialized;;
 
@@ -177,6 +179,6 @@ class CartesianControllerBase : public controller_interface::Controller<Hardware
 
 }
 
-#include <cartesian_controller_base/cartesian_controller_base.hpp>
+#include "../../src/cartesian_controller_base.hpp"
 
 #endif

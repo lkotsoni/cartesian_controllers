@@ -172,6 +172,8 @@ init(HardwareInterface* hw, ros::NodeHandle& nh)
   // Start with normal ROS control behavior
   m_paused = false;
 
+  pub = nh.advertise<geometry_msgs::WrenchStamped>("/cmd", 1000);
+
   return true;
 }
 
@@ -255,6 +257,37 @@ computeJointControlCmds(const ctrl::Vector6D& error, const ros::Duration& period
   m_simulated_joint_motion = m_forward_dynamics_solver.getJointControlCmds(
       period,
       m_cartesian_input);
+
+//  myfile.open("example.txt", std::ios::app);
+//  myfile << ros::Time::now() << ","
+//         << m_cartesian_input[0] << "," << m_cartesian_input[1] << ","
+//         << m_cartesian_input[2] << "," << m_cartesian_input[3] << ","
+//         << m_cartesian_input[4] << "," << m_cartesian_input[5]
+//         << std::endl;
+//  myfile.close();
+  geometry_msgs::WrenchStamped wrench;
+  wrench.header.stamp = ros::Time::now();
+  wrench.wrench.force.x = m_cartesian_input(0);
+  wrench.wrench.force.y = m_cartesian_input(1);
+  wrench.wrench.force.z = m_cartesian_input(2);
+  wrench.wrench.torque.x = m_cartesian_input(3);
+  wrench.wrench.torque.y = m_cartesian_input(4);
+  wrench.wrench.torque.z = m_cartesian_input(5);
+
+  pub.publish(wrench);
+
+//  myfile << ros::Time::now() << ","
+//         << m_simulated_joint_motion.positions[0] << "," << m_simulated_joint_motion.positions[1] << ","
+//         << m_simulated_joint_motion.positions[2] << "," << m_simulated_joint_motion.positions[3] << ","
+//         << m_simulated_joint_motion.positions[4] << "," << m_simulated_joint_motion.positions[5] << ","
+//         << m_simulated_joint_motion.velocities[0] << "," << m_simulated_joint_motion.velocities[1] << ","
+//         << m_simulated_joint_motion.velocities[2] << "," << m_simulated_joint_motion.velocities[3] << ","
+//         << m_simulated_joint_motion.velocities[4] << "," << m_simulated_joint_motion.velocities[5] << ","
+//         << std::endl;
+//  myfile.close();
+
+//  std::cout << "Input:" << m_simulated_joint_motion << std::endl;
+//  std::cout << "Time:" << ros::Time::now() << std::endl;
 
   // Update according to control policy for next cycle
   m_forward_dynamics_solver.updateKinematics<HardwareInterface>(m_joint_handles);
