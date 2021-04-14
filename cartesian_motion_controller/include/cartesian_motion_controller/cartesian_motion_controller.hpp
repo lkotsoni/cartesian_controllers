@@ -239,16 +239,16 @@ targetTwistCallback(const geometry_msgs::Twist& twist)
 //    return;
 //  }
 
-  m_target_frame = KDL::Frame(
-      KDL::Rotation::Quaternion(
-        target.orientation.x,
-        target.orientation.y,
-        target.orientation.z,
-        target.orientation.w),
-      KDL::Vector(
-        target.position.x,
-        target.position.y,
-        target.position.z));
+  // m_target_frame = KDL::Frame(
+  //     KDL::Rotation::Quaternion(
+  //       target.orientation.x,
+  //       target.orientation.y,
+  //       target.orientation.z,
+  //       target.orientation.w),
+  //     KDL::Vector(
+  //       target.position.x,
+  //       target.position.y,
+  //       target.position.z));
 }
 
 } // namespace
