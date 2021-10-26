@@ -239,6 +239,16 @@ writeJointControlCmds()
   {
     m_joint_handles[i].setCommand(m_simulated_joint_motion.velocities[i]);
   }
+  geometry_msgs::WrenchStamped wrench;
+  wrench.header.stamp = ros::Time::now();
+  wrench.wrench.force.x = m_simulated_joint_motion.velocities[0];
+  wrench.wrench.force.y = m_simulated_joint_motion.velocities[1];
+  wrench.wrench.force.z = m_simulated_joint_motion.velocities[2];
+  wrench.wrench.torque.x = m_simulated_joint_motion.velocities[3];
+  wrench.wrench.torque.y = m_simulated_joint_motion.velocities[4];
+  wrench.wrench.torque.z = m_simulated_joint_motion.velocities[5];
+
+  pub.publish(wrench);
 }
 
 template <class HardwareInterface>
@@ -265,16 +275,16 @@ computeJointControlCmds(const ctrl::Vector6D& error, const ros::Duration& period
 //         << m_cartesian_input[4] << "," << m_cartesian_input[5]
 //         << std::endl;
 //  myfile.close();
-  geometry_msgs::WrenchStamped wrench;
-  wrench.header.stamp = ros::Time::now();
-  wrench.wrench.force.x = m_cartesian_input(0);
-  wrench.wrench.force.y = m_cartesian_input(1);
-  wrench.wrench.force.z = m_cartesian_input(2);
-  wrench.wrench.torque.x = m_cartesian_input(3);
-  wrench.wrench.torque.y = m_cartesian_input(4);
-  wrench.wrench.torque.z = m_cartesian_input(5);
+  // geometry_msgs::WrenchStamped wrench;
+  // wrench.header.stamp = ros::Time::now();
+  // wrench.wrench.force.x = m_cartesian_input(0);
+  // wrench.wrench.force.y = m_cartesian_input(1);
+  // wrench.wrench.force.z = m_cartesian_input(2);
+  // wrench.wrench.torque.x = m_cartesian_input(3);
+  // wrench.wrench.torque.y = m_cartesian_input(4);
+  // wrench.wrench.torque.z = m_cartesian_input(5);
 
-  pub.publish(wrench);
+  // pub.publish(wrench);
 
 //  myfile << ros::Time::now() << ","
 //         << m_simulated_joint_motion.positions[0] << "," << m_simulated_joint_motion.positions[1] << ","
